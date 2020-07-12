@@ -40,29 +40,20 @@ type Deposit @entity {
   keepSetupFee: BigInt!
 
   # SET ON FRAUD
-  liquidation: DepositLiquidation
+  depositLiquidation: DepositLiquidation
 
-  #// written when we request a keep
-  #address keepAddress;  // The address of our keep contract
-  #uint256 signingGroupRequestedAt;  // timestamp of signing group request
+  # written when we request a keep
+  keepAddress: Bytes # The address of our keep contract
+  signingGroupRequestedAt: BigInt # timestamp of signing group request
+  # written when we get a keep result
+  fundingProofTimerStart: BigInt # start of the funding proof period. reused for funding fraud proof period
+  signingGroupPubkeyX: Bytes # The X coordinate of the signing group's pubkey
+  signingGroupPubkeyY: Bytes # The Y coordinate of the signing group's pubkey
+  # INITIALLY WRITTEN BY REDEMPTION FLOW
+  depositRedemption: DepositRedemption
 
-  #// written when we get a keep result
-  #uint256 fundingProofTimerStart;  // start of the funding proof period. reused for funding fraud proof period
-  #bytes32 signingGroupPubkeyX;  // The X coordinate of the signing group's pubkey
-  #bytes32 signingGroupPubkeyY;  // The Y coordinate of the signing group's pubkey
-
-  #// INITIALLY WRITTEN BY REDEMPTION FLOW
-  #address payable redeemerAddress;  // The redeemer's address, used as fallback for fraud in redemption
-  #bytes redeemerOutputScript;  // The redeemer output script
-  #uint256 initialRedemptionFee;  // the initial fee as requested
-  #uint256 latestRedemptionFee; // the fee currently required by a redemption transaction
-  #uint256 withdrawalRequestTime;  // the most recent withdrawal request timestamp
-  #bytes32 lastRequestedDigest;  // the digest most recently requested for signing
-
-  #// written when we get funded
-  #bytes8 utxoValueBytes;  // LE uint. the size of the deposit UTXO in satoshis
-  #uint256 fundedAt; // timestamp when funding proof was received
-  #bytes utxoOutpoint;  // the 36-byte outpoint of the custodied UTXO
+  # written when we get funded
+  depositFunding: DepositFunding
 }
 
 enum DepositState {
@@ -90,9 +81,29 @@ enum DepositState {
   LIQUIDATED
 }
 
+type DepositFunding @entity {
+  id: ID!
+  deposit: Deposit!
+  utxoValueBytes: Bytes # LE uint. the size of the deposit UTXO in satoshis
+  fundedAt: BigInt # timestamp when funding proof was received
+  utxoOutpoint: Bytes # the 36-byte outpoint of the custodied UTXO
+}
+
 type DepositLiquidation @entity {
   id: ID!
+  deposit: Deposit!
   liquidationInitiated: BigInt # Timestamp of when liquidation starts
   courtesyCallInitiated: BigInt # When the courtesy call is issued
   liquidationInitiator: Bytes
+}
+
+type DepositRedemption @entity {
+  id: ID!
+  deposit: Deposit!
+  redeemerAddress: Bytes # The redeemer's address, used as fallback for fraud in redemption
+  redeemerOutputScript: Bytes # The redeemer output script
+  initialRedemptionFee: BigInt # the initial fee as requested
+  latestRedemptionFee: BigInt # the fee currently required by a redemption transaction
+  withdrawalRequestTime: BigInt # the most recent withdrawal request timestamp
+  lastRequestedDigest: Bytes # the digest most recently requested for signing
 }
