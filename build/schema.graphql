@@ -1,4 +1,98 @@
-type Testing @entity {
+type TBTCDepositToken @entity {
   id: ID!
-  owner: Bytes!
+  name: String!
+  symbol: String!
+  address: Bytes!
+  depositFactoryAddress: Bytes!
+}
+
+type TBTCToken @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+  decimals: Int!
+  address: Bytes!
+}
+
+type FeeRebateToken @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+  address: Bytes!
+}
+
+# from https://github.com/keep-network/tbtc/blob/master/solidity/contracts/deposit/DepositUtils.sol
+type Deposit @entity {
+  id: ID!
+  tbtcSystem: Bytes! # address of the system contract
+  tbtcToken: TBTCToken!
+  tbtcDepositToken: TBTCDepositToken!
+  FeeRebateToken: FeeRebateToken!
+  vendingMachineAddress: Bytes!
+
+  # SET DURING CONSTRUCTION
+  lotSizeSatoshis: BigInt!
+  currentState: DepositState
+  signerFeeDivisor: Int!
+  initialCollateralizedPercent: Int!
+  undercollateralizedThresholdPercent: Int!
+  severelyUndercollateralizedThresholdPercent: Int!
+  keepSetupFee: BigInt!
+
+  # SET ON FRAUD
+  liquidation: DepositLiquidation
+
+  #// written when we request a keep
+  #address keepAddress;  // The address of our keep contract
+  #uint256 signingGroupRequestedAt;  // timestamp of signing group request
+
+  #// written when we get a keep result
+  #uint256 fundingProofTimerStart;  // start of the funding proof period. reused for funding fraud proof period
+  #bytes32 signingGroupPubkeyX;  // The X coordinate of the signing group's pubkey
+  #bytes32 signingGroupPubkeyY;  // The Y coordinate of the signing group's pubkey
+
+  #// INITIALLY WRITTEN BY REDEMPTION FLOW
+  #address payable redeemerAddress;  // The redeemer's address, used as fallback for fraud in redemption
+  #bytes redeemerOutputScript;  // The redeemer output script
+  #uint256 initialRedemptionFee;  // the initial fee as requested
+  #uint256 latestRedemptionFee; // the fee currently required by a redemption transaction
+  #uint256 withdrawalRequestTime;  // the most recent withdrawal request timestamp
+  #bytes32 lastRequestedDigest;  // the digest most recently requested for signing
+
+  #// written when we get funded
+  #bytes8 utxoValueBytes;  // LE uint. the size of the deposit UTXO in satoshis
+  #uint256 fundedAt; // timestamp when funding proof was received
+  #bytes utxoOutpoint;  // the 36-byte outpoint of the custodied UTXO
+}
+
+enum DepositState {
+  # DOES NOT EXIST YET
+  START
+
+  # FUNDING FLOW
+  AWAITING_SIGNER_SETUP
+  AWAITING_BTC_FUNDING_PROOF
+
+  # FAILED SETUP
+  FAILED_SETUP
+
+  # ACTIVE
+  ACTIVE # includes courtesy call
+  # REDEMPTION FLOW
+  AWAITING_WITHDRAWAL_SIGNATURE
+  AWAITING_WITHDRAWAL_PROOF
+  REDEEMED
+
+  # SIGNER LIQUIDATION FLOW
+  COURTESY_CALL
+  FRAUD_LIQUIDATION_IN_PROGRESS
+  LIQUIDATION_IN_PROGRESS
+  LIQUIDATED
+}
+
+type DepositLiquidation @entity {
+  id: ID!
+  liquidationInitiated: BigInt # Timestamp of when liquidation starts
+  courtesyCallInitiated: BigInt # When the courtesy call is issued
+  liquidationInitiator: Bytes
 }
