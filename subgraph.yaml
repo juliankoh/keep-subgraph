@@ -1,5 +1,5 @@
 specVersion: 0.0.2
-description: Gravatar for Ethereum
+description: Keep Network Minting
 repository: https://github.com/graphprotocol/example-subgraph
 schema:
   file: ./schema.graphql
