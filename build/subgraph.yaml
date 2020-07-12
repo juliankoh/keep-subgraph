@@ -23,3 +23,19 @@ dataSources:
         - event: Redeemed(indexed address,indexed bytes32,uint256)
           handler: handleRedeemed
       file: TBTCSystem/TBTCSystem.wasm
+templates:
+  - name: TBTCDepositToken
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: TBTCDepositToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.1
+      language: wasm/assemblyscript
+      file: templates/TBTCDepositToken/TBTCDepositToken.wasm
+      entities:
+        - TBTCDepositToken
+      abis:
+        - name: TBTCDepositToken
+          file: TBTCDepositToken/abis/TBTCDepositToken.json

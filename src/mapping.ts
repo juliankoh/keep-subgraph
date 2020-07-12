@@ -1,10 +1,10 @@
-import { Created } from "../generated/TBTCSystem/TBTCSystem";
+import { Created, TBTCSystem } from "../generated/TBTCSystem/TBTCSystem";
 import { Deposit } from "../generated/schema";
 
 import { getTBTCToken } from "./TBTCToken";
 
 export function handleCreateNewDeposit(event: Created): void {
-  const depositID =
+  let depositID =
     event.params._depositContractAddress.toHexString() +
     "-" +
     event.params._keepAddress.toHexString() +
