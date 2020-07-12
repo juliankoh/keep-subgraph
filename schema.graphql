@@ -84,6 +84,8 @@ enum DepositState {
 type DepositFunding @entity {
   id: ID!
   deposit: Deposit!
+  bitcoinPrice: BigInt
+  bondRequirementWei: BigInt
   utxoValueBytes: Bytes # LE uint. the size of the deposit UTXO in satoshis
   fundedAt: BigInt # timestamp when funding proof was received
   utxoOutpoint: Bytes # the 36-byte outpoint of the custodied UTXO
