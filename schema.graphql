@@ -26,8 +26,8 @@ type Deposit @entity {
   id: ID!
   tbtcSystem: Bytes! # address of the system contract
   tbtcToken: TBTCToken!
-  tbtcDepositToken: TBTCDepositToken!
-  FeeRebateToken: FeeRebateToken!
+  tbtcDepositToken: TBTCDepositToken
+  FeeRebateToken: FeeRebateToken
   vendingMachineAddress: Bytes!
 
   # SET DURING CONSTRUCTION

@@ -14,12 +14,20 @@
 // }
 
 import { Created } from "../generated/TBTCSystem/TBTCSystem";
-import {
-  Deposit,
-  TBTCDepositToken,
-  TBTCToken,
-  FeeRebateToken,
-  DepositFunding,
-} from "../generated/schema";
+import { Deposit } from "../generated/schema";
 
-export function handleCreateNewDeposit(event: Created): void {}
+import { getTBTCToken } from "./TBTCToken";
+
+export function handleCreateNewDeposit(event: Created): void {
+  const depositID =
+    event.params._depositContractAddress.toHexString() +
+    "-" +
+    event.params._keepAddress.toHexString() +
+    "-" +
+    event.params._timestamp.toString();
+
+  let deposit = new Deposit(depositID);
+  deposit.keepAddress = event.params._keepAddress;
+  deposit.tbtcToken = getTBTCToken().id;
+  deposit.save();
+}
