@@ -12,3 +12,14 @@
 //   gravatar.imageUrl = event.params.imageUrl
 //   gravatar.save()
 // }
+
+import { Created } from "../generated/TBTCSystem/TBTCSystem";
+import {
+  Deposit,
+  TBTCDepositToken,
+  TBTCToken,
+  FeeRebateToken,
+  DepositFunding,
+} from "../generated/schema";
+
+export function handleCreateNewDeposit(event: Created): void {}

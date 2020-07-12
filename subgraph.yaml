@@ -8,7 +8,7 @@ dataSources:
     name: TBTCSystem
     network: mainnet
     source:
-      address: '0x41A1b40c1280883eA14C6a71e23bb66b83B3fB59'
+      address: "0x41A1b40c1280883eA14C6a71e23bb66b83B3fB59"
       abi: TBTCSystem
     mapping:
       kind: ethereum/events
@@ -23,3 +23,19 @@ dataSources:
         - event: Redeemed(indexed address,indexed bytes32,uint256)
           handler: handleRedeemed
       file: ./src/mapping.ts
+templates:
+  - name: TBTCDepositToken
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: TBTCDepositToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.1
+      language: wasm/assemblyscript
+      file: ./src/TBTCDepositToken.ts
+      entities:
+        - TBTCDepositToken
+      abis:
+        - name: TBTCDepositToken
+          file: ./abis/TBTCDepositToken.json
