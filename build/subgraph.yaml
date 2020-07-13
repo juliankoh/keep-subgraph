@@ -8,6 +8,7 @@ dataSources:
     name: TBTCSystem
     network: mainnet
     source:
+      startBlock: 10071347
       address: "0x41A1b40c1280883eA14C6a71e23bb66b83B3fB59"
       abi: TBTCSystem
     mapping:
@@ -20,8 +21,8 @@ dataSources:
         - name: TBTCSystem
           file: TBTCSystem/abis/TBTCSystem.json
       eventHandlers:
-        - event: Redeemed(indexed address,indexed bytes32,uint256)
-          handler: handleRedeemed
+        - event: Created(indexed address,indexed address,uint256)
+          handler: handleCreateNewDeposit
       file: TBTCSystem/TBTCSystem.wasm
 templates:
   - name: TBTCDepositToken
